@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<diagram xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="84461889-7adb-4c18-be0d-1c0f84c625f3" domain="TranslationManager" xmlns="http://schemas.microsoft.com/dsltools/EntityDesigner">
+  <entities>
+    <entity Id="6980976c-08d2-4a95-ac78-3b8d10e974ef" name="Translation" guid="c0e6979c-aa76-4576-9f4c-4223537927ae" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="DateCreated" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Key" defaultValue="&quot;&quot;" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Ignore" type="Boolean" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Values" type="TranslationValue" defaultValue="&quot;&quot;" isCustomType="true" identity="false" isEnumType="false" isCompoType="true" isExternType="false" isEnumInBaseType="false" multiplicity="Multiple" />
+      </properties>
+    </entity>
+    <entity Id="b6f5b58b-9527-4f5f-892b-9d55f6e78d8e" name="Language" guid="c3aad5c4-03f4-4f8a-8b56-2dfc8376953d" mustPersist="false" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="Key" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </entity>
+  </entities>
+  <compositeTypes>
+    <compositeType Id="1a9135c8-ccb1-49da-b21b-f5a6c62dfe1b" name="TranslationValue" guid="00000000-0000-0000-0000-000000000000">
+      <properties>
+        <compositeTypeProperty name="Language" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" isAccessKey="true" />
+        <compositeTypeProperty name="Value" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </compositeType>
+  </compositeTypes>
+</diagram>
