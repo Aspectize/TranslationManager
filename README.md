@@ -60,7 +60,9 @@ Check your DataBase and notice the Translation and Translation1Values new tables
 
 Each time, you add new UX elements that should require some translations, run the command to update your translations.
 
-## 4 - Export and Import Translation
+## 4 - Export and Import Translation into Excel File
+
+
 
 
 
