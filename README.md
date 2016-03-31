@@ -25,7 +25,7 @@ Add a new service definition:
 var myTranslationManagerService = Aspectize.ConfigureNewService("MyTranslationManagerService", aas.ConfigurableServices.TranslationManagerService);
 myTranslationManagerService.DataServiceName = "MyDataService";
 myTranslationManagerService.KeyLanguage = "en-US";
-myTranslationManagerService.Languages = "en-US|fr-FR";
+myTranslationManagerService.Languages = "fr-FR";
 ```
 
 The configurable Service has 3 parameters:
