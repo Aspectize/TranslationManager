@@ -12,21 +12,21 @@ namespace TranslationManager
 {
     public interface ITranslationManagerService
     {
-        void ExtractLiterals(string applicationName);
+        string ExtractLiterals(string applicationName);
         DataSet ImportTraductionFromExcel(UploadedFile excelFile);
         byte[] ExportTranslation();
     }
 
-    [Service(Name = "TranslationManagerService")]
+    [Service(Name = "TranslationManagerService", ConfigurationRequired = true)]
     public class TranslationManagerService : ITranslationManagerService, ILocalizationProvider, ISingleton, IApplicationDependent
     {
-        //[Parameter(Optional = false)]
+        [Parameter(Optional = false)]
         string DataServiceName = "";
 
-        //[Parameter(Optional = false)]
+        [Parameter(Optional = false)]
         string KeyLanguage = "";
 
-        //[Parameter(Optional = false)]
+        [Parameter(Optional = false)]
         string Languages = "";
 
         Application parentApp;
@@ -38,7 +38,7 @@ namespace TranslationManager
             set { parentApp = value; }
         }
 
-        void ITranslationManagerService.ExtractLiterals(string applicationName)
+        string ITranslationManagerService.ExtractLiterals(string applicationName)
         {
             if (string.IsNullOrEmpty(applicationName)) applicationName = parentApp.Name;
 
@@ -61,6 +61,8 @@ namespace TranslationManager
 
             List<string> literals = TranslationHelper.ExtractWebLiterals2(Context.HostHome, applicationName, one);
 
+            var nbSaved = 0;
+
             foreach (string l in literals)
             {
                 if (!dicoTranslations.ContainsKey(l))
@@ -76,10 +78,14 @@ namespace TranslationManager
                         tv.Language = language;
                         tv.Value = "";
                     }
+
+                    nbSaved++;
                 }
             }
 
             dm.SaveTransactional();
+
+            return string.Format("{0} translations has been extracted, {1} translations has been saved in your storage {2}", literals.Count, nbSaved, DataServiceName);
         }
 
         DataSet ITranslationManagerService.ImportTraductionFromExcel(UploadedFile excelFile)
@@ -167,7 +173,7 @@ namespace TranslationManager
 
         Dictionary<string, string> ILocalizationProvider.GetTranslator(string fromLanguage, string toLanguage)
         {
-            var dictionaryName = String.Format("{0} {1} {2}", parentApp.Name, fromLanguage, toLanguage);
+            var dictionaryName = String.Format("{0} {1}", fromLanguage, toLanguage);
 
             if (!dictionaries.ContainsKey(dictionaryName))
             {
@@ -246,11 +252,15 @@ namespace TranslationManager
                 {
                     row[translationValue.Language] = translationValue.Value;
                 }
+
+                dtTranslation.Rows.Add(row);
             }
+
+            emExport.Data.AcceptChanges();
             
             var bytes = aspectizeExcel.ToExcel(emExport.Data, null);
 
-            ExecutingContext.SetHttpDownloadFileName(string.Format("Translation_{0:ddMMyyyyHHmm}.xlsx", DateTime.Now));
+            ExecutingContext.SetHttpDownloadFileName(string.Format("Translation_{0}_{1:ddMMyyyyHHmm}.xlsx", parentApp.Name, DateTime.Now));
 
             return bytes as byte[];
         }
