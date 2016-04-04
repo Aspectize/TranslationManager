@@ -105,6 +105,7 @@
     <Content Include="Lib\Excel.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SampleView.js" />
     <Content Include="TranslationManager.htm" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

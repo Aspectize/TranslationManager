@@ -7,11 +7,37 @@
 
     <div aas-control="TranslationManager">
         <div class="row">
-            <label>Search for a translation</label>
-            <input type="text" class="form-control" name="TxtSearch" />
+            <div class="pull-right">
+                <button class="btn btn-default" name="BtnExtractTranslation">ExtractTranslation</button>
+                <a aas-name="BtnExportToExcel">Export to Excel</a>
+                <div style="display:inline-block;">
+                    <div aas-name="UploadExcelFile" aas-type="AspectizeFileUpload"></div>
+                </div>
+            </div>
         </div>
         <div class="row">
+            <div class="col-md-6">
+                <label>Search for a translation</label>
+                <input type="text" class="form-control" name="TxtSearch" />
+                <div aas-name="GridTranslation" aas-type="Bootstrap.BootstrapGrid"></div>
+            </div>
+            <div class="col-md-6" style="padding-top: 50px;">
+                <div class="row">
+                    <button class="btn btn-primary pull-right" name="BtnSave">Save</button>
+                </div>
+                <div class="form-horizontal">
+                    <div aas-name="RepeaterPanelTranslationItemValues" aas-type="AspectizeRepeaterPanel"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div aas-control="TranslationItemValues">
+        <div class="form-group">
+            <label class="col-md-3 control-label">{Language}</label>
+            <div class="col-md-9">
+                <input type="text" class="form-control" name="TxtTranslation" />
+            </div>
         </div>
     </div>
 

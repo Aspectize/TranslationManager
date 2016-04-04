@@ -59,6 +59,7 @@ namespace TranslationManager
 			public const string DateCreated = "DateCreated";
 			public const string Key = "Key";
 			public const string Ignore = "Ignore";
+			public const string IsNew = "IsNew";
 			public const string Values = "Values";
 		}
 
@@ -90,11 +91,18 @@ namespace TranslationManager
 			set { setValue<string>("Key", value); }
 		}
 
-		[Data]
+		[Data(DefaultValue = false)]
 		public bool Ignore
 		{
 			get { return getValue<bool>("Ignore"); }
 			set { setValue<bool>("Ignore", value); }
+		}
+
+		[Data(DefaultValue = false)]
+		public bool IsNew
+		{
+			get { return getValue<bool>("IsNew"); }
+			set { setValue<bool>("IsNew", value); }
 		}
 
 		[Data(DefaultValue = "")]

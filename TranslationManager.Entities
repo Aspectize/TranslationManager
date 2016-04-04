@@ -5,7 +5,8 @@
       <properties>
         <entityProperty name="DateCreated" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
         <entityProperty name="Key" defaultValue="&quot;&quot;" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
-        <entityProperty name="Ignore" type="Boolean" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Ignore" type="Boolean" defaultValue="false" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="IsNew" type="Boolean" defaultValue="false" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
         <entityProperty name="Values" type="TranslationValue" defaultValue="&quot;&quot;" isCustomType="true" identity="false" isEnumType="false" isCompoType="true" isExternType="false" isEnumInBaseType="false" multiplicity="Multiple" />
       </properties>
     </entity>

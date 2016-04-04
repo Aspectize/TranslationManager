@@ -12,9 +12,14 @@ namespace TranslationManager
 {
     public interface ITranslationManagerService
     {
+        DataSet LoadTranslations();
         string ExtractLiterals(string applicationName);
         DataSet ImportTraductionFromExcel(UploadedFile excelFile);
-        byte[] ExportTranslation();
+        byte[] ExportTranslationToExcel();
+
+        [Command(IsSaveCommand = true)]
+        void SaveTranslations(DataSet dataSet);
+
     }
 
     [Service(Name = "TranslationManagerService", ConfigurationRequired = true)]
@@ -36,6 +41,15 @@ namespace TranslationManager
         Application IApplicationDependent.Parent
         {
             set { parentApp = value; }
+        }
+
+        DataSet ITranslationManagerService.LoadTranslations()
+        {
+            IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
+
+            dm.LoadEntitiesFields<Translation>(EntityLoadOption.AllFields);
+
+            return dm.Data;
         }
 
         string ITranslationManagerService.ExtractLiterals(string applicationName)
@@ -192,7 +206,7 @@ namespace TranslationManager
 
                 IEntityManager em = dm as IEntityManager;
 
-                List<Translation> translations = dm.GetEntities<Translation>(new QueryCriteria(Translation.Fields.Ignore, ComparisonOperator.Equal, false));
+                List<Translation> translations = dm.GetEntitiesFields<Translation>(EntityLoadOption.AllFields, new QueryCriteria(Translation.Fields.Ignore, ComparisonOperator.Equal, false));
 
                 foreach (Translation translation in translations)
                 {
@@ -219,7 +233,7 @@ namespace TranslationManager
         }
 
 
-        byte[] ITranslationManagerService.ExportTranslation()
+        byte[] ITranslationManagerService.ExportTranslationToExcel()
         {
             IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
 
@@ -257,12 +271,33 @@ namespace TranslationManager
             }
 
             emExport.Data.AcceptChanges();
-            
-            var bytes = aspectizeExcel.ToExcel(emExport.Data, null);
 
             ExecutingContext.SetHttpDownloadFileName(string.Format("Translation_{0}_{1:ddMMyyyyHHmm}.xlsx", parentApp.Name, DateTime.Now));
 
+            var bytes = aspectizeExcel.ToExcel(emExport.Data, null);
+
             return bytes as byte[];
+        }
+
+
+        void ITranslationManagerService.SaveTranslations(DataSet dataSet)
+        {
+            IDataManager dm = EntityManager.FromDataSetAndBaseService(dataSet, DataServiceName);
+
+            //IEntityManager em = dm as IEntityManager;
+
+            //foreach (Translation translation in em.GetAllInstances<Translation>())
+            //{
+            //    if (translation.IsNew)
+            //    {
+            //        translation.IsNew = false;
+            //        translation.data.AcceptChanges();
+            //        translation.data.SetAdded();
+            //    }
+            //}
+
+            dm.SaveTransactional();
+
         }
     }
 
