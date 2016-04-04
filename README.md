@@ -50,7 +50,7 @@ Rebuild your App.
 In your app, run the following command:
 MyTranslationManagerService.ExtractLiterals
 
-Just copy the command url in your browser:
+You can run a command from your browser; just copy the command url in your browser:
 http://[MylocalWebHost]/[MyApp]/MyTranslationManagerService.ExtractLiterals.json.cmd.ashx
 
 You should see the following return message:
@@ -60,7 +60,17 @@ Check your DataBase and notice the Translation and Translation1Values new tables
 
 Each time, you add new UX elements that should require some translations, run the command to update your translations.
 
-## 4 - Export and Import Translation into Excel File
+## 4 - Export Translation into Excel File
+
+In your app, run the following command:
+MyTranslationManagerService.ExportTranslationToExcel
+
+You can run a command from your browser; just copy the following url in your browser (be carefull of bin as type request):
+http://[MylocalWebHost]/[MyApp]/MyTranslationManagerService.ExportTranslationToExcel.bin.cmd.ashx
+
+You should get an excel file with all your tranlations
+
+## 5 - Import translation from Excel file
 
 
 
