@@ -56,11 +56,13 @@ http://[MylocalWebHost]/[MyApp]/MyTranslationManagerService.ExtractLiterals.json
 You should see the following return message:
 ('26 translations has been extracted, 26 translations has been saved in your storage DataService')
 
-Check your DataBase and notice the Translation and Translation1Values new tables.
+Check your DataBase and notice the Translation and Translation1Values new tables contain your translations.
 
 Each time, you add new UX elements that should require some translations, run the command to update your translations.
 
-## 4 - Export and Import Translation
+## 4 - Export and Import Translation into Excel File
+
+
 
 
 
