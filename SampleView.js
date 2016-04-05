@@ -2,7 +2,8 @@
 
 //vTranslations.OnLoad.BindCommand(aas.Services.Server.MyTranslationManagerService.LoadTranslations(), aas.Data.TranslationData, true, true);
 //vTranslations.BtnExtractTranslation.click.BindCommand('Server/MyTranslationManagerService.ExtractLiterals');
-//vTranslations.BtnExportToExcel.href.BindData('MyTranslationManagerService.ExportTranslation.bin.cmd.ashx');
+//vTranslations.BtnExportToExcel.href.BindData('MyTranslationManagerService.ExportTranslationToExcel.bin.cmd.ashx');
+//vTranslations.BtnExportToExcel.target.BindData('_blank');
 //vTranslations.UploadExcelFile.OnFileSelected.BindCommand(aas.Services.Server.MyTranslationManagerService.ImportTraductionFromExcel(vTranslations.UploadExcelFile.SelectedFile));
 //vTranslations.BtnSave.click.BindCommand(aas.Services.Server.MyTranslationManagerService.SaveTranslations(aas.Data.TranslationData), '', false, true);
 //vTranslations.TxtSearch.keyup.BindCommand(aas.Services.Browser.UIService.SetCustomFilter, { controlName: aas.ViewName.Translations.GridTranslation, customFilter: aas.Expression('(Key).toLowerCase().indexOf("' + vTranslations.TxtSearch.value + '".toLowerCase()) !== -1') });

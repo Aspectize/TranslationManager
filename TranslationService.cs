@@ -239,7 +239,7 @@ namespace TranslationManager
 
             IEntityManager em = dm as IEntityManager;
 
-            dm.LoadEntities<Translation>(new QueryCriteria(Translation.Fields.Ignore, ComparisonOperator.Equal, false));
+            dm.LoadEntitiesFields<Translation>(EntityLoadOption.AllFields, new QueryCriteria(Translation.Fields.Ignore, ComparisonOperator.Equal, false));
 
             IAspectizeExcel aspectizeExcel = ExecutingContext.GetService<IAspectizeExcel>("AspectizeExcel");
 
