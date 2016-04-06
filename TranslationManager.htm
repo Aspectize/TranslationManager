@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html> 
+﻿<!DOCTYPE html>
 <html>
 <head>
     <title>Untitled</title>
@@ -8,7 +8,7 @@
     <div aas-control="TranslationManager">
         <div class="row">
             <div class="pull-right">
-                <button class="btn btn-default" name="BtnExtractTranslation">ExtractTranslation</button>
+                <button class="btn btn-default" name="BtnExtractTranslation">Extract new translations</button>
                 <a aas-name="BtnExportToExcel">Export to Excel</a>
                 <div style="display:inline-block;">
                     <div aas-name="UploadExcelFile" aas-type="AspectizeFileUpload"></div>
@@ -17,20 +17,44 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <label>Search for a translation</label>
-                <input type="text" class="form-control" name="TxtSearch" />
-                <div aas-name="GridTranslation" aas-type="Bootstrap.BootstrapGrid"></div>
-            </div>
-            <div class="col-md-6" style="padding-top: 50px;">
                 <div class="row">
-                    <button class="btn btn-primary pull-right" name="BtnSave">Save</button>
+                    <label class="col-md-4">Search for a translation</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="TxtSearch" />
+                    </div>
                 </div>
-                <div class="form-horizontal">
-                    <div aas-name="RepeaterPanelTranslationItemValues" aas-type="AspectizeRepeaterPanel"></div>
+                <div class="row">
+                    <div aas-name="GridTranslation" aas-type="Bootstrap.BootstrapGrid"></div>
+                </div>
+                <div class="row">
+                    <div class="checkbox">
+                        <label>
+                            <input name="CheckBoxDisplayIgnore" type="checkbox"> display ignore items
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input name="CheckBoxDisplayNew" type="checkbox"> display new items only
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" style="margin-top: 50px;">
+                <div class="well">
+                    <div class="row">
+                        <label class="col-md-offset-3 control-label">{TranslationKey}</label>
+                    </div>
+                    <div class="form-horizontal">
+                        <div aas-name="RepeaterPanelTranslationItemValues" aas-type="AspectizeRepeaterPanel"></div>
+                    </div>
+                    <div class="row">
+                        <button class="btn btn-primary pull-right" name="BtnSave">Save</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 
     <div aas-control="TranslationItemValues">
         <div class="form-group">

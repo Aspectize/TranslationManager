@@ -13,13 +13,14 @@ namespace TranslationManager
     public interface ITranslationManagerService
     {
         DataSet LoadTranslations();
-        string ExtractLiterals(string applicationName);
+        DataSet ExtractLiterals(string applicationName);
         DataSet ImportTraductionFromExcel(UploadedFile excelFile);
         byte[] ExportTranslationToExcel();
 
         [Command(IsSaveCommand = true)]
-        void SaveTranslations(DataSet dataSet);
+        DataSet SaveTranslations(DataSet dataSet);
 
+        void ResetTranslationCache();
     }
 
     [Service(Name = "TranslationManagerService", ConfigurationRequired = true)]
@@ -52,7 +53,7 @@ namespace TranslationManager
             return dm.Data;
         }
 
-        string ITranslationManagerService.ExtractLiterals(string applicationName)
+        DataSet ITranslationManagerService.ExtractLiterals(string applicationName)
         {
             if (string.IsNullOrEmpty(applicationName)) applicationName = parentApp.Name;
 
@@ -84,6 +85,7 @@ namespace TranslationManager
                     var t = em.CreateInstance<Translation>();
 
                     t.Key = l;
+                    t.IsNew = true;
 
                     foreach (string language in languages)
                     {
@@ -99,7 +101,8 @@ namespace TranslationManager
 
             dm.SaveTransactional();
 
-            return string.Format("{0} translations has been extracted, {1} translations has been saved in your storage {2}", literals.Count, nbSaved, DataServiceName);
+            return dm.Data;
+            //return string.Format("{0} translations has been extracted, {1} translations has been saved in your storage {2}", literals.Count, nbSaved, DataServiceName);
         }
 
         DataSet ITranslationManagerService.ImportTraductionFromExcel(UploadedFile excelFile)
@@ -280,24 +283,30 @@ namespace TranslationManager
         }
 
 
-        void ITranslationManagerService.SaveTranslations(DataSet dataSet)
+        DataSet ITranslationManagerService.SaveTranslations(DataSet dataSet)
         {
             IDataManager dm = EntityManager.FromDataSetAndBaseService(dataSet, DataServiceName);
 
-            //IEntityManager em = dm as IEntityManager;
+            IEntityManager em = dm as IEntityManager;
 
-            //foreach (Translation translation in em.GetAllInstances<Translation>())
-            //{
-            //    if (translation.IsNew)
-            //    {
-            //        translation.IsNew = false;
-            //        translation.data.AcceptChanges();
-            //        translation.data.SetAdded();
-            //    }
-            //}
+            foreach (Translation translation in em.GetAllInstances<Translation>())
+            {
+                if (translation.IsNew)
+                {
+                    translation.IsNew = false;
+                    translation.data.AcceptChanges();
+                    translation.data.SetAdded();
+                }
+            }
 
             dm.SaveTransactional();
 
+            return dm.Data;
+        }
+
+        void ITranslationManagerService.ResetTranslationCache()
+        {
+            dictionaries.Clear();
         }
     }
 
