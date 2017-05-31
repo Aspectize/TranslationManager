@@ -15,7 +15,7 @@ namespace TranslationManager
 	{
 		public static partial class Entities
 		{
-			public const string Translation = "Translation";
+			public const string AspectizeTranslation = "AspectizeTranslation";
 			public const string Language = "Language";
 		}
 	}
@@ -51,7 +51,7 @@ namespace TranslationManager
 	}
 
 	[DataDefinition]
-	public class Translation : Entity, IDataWrapper
+	public class AspectizeTranslation : Entity, IDataWrapper
 	{
 		public static partial class Fields
 		{

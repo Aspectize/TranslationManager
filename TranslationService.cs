@@ -7,6 +7,7 @@ using Aspectize;
 using Aspectize.Office;
 using Excel;
 using System.IO;
+using System.Linq;
 
 namespace TranslationManager
 {
@@ -24,7 +25,7 @@ namespace TranslationManager
     }
 
     [Service(Name = "TranslationManagerService", ConfigurationRequired = true)]
-    public class TranslationManagerService : ITranslationManagerService, ILocalizationProvider, ISingleton, IApplicationDependent
+    public class TranslationManagerService : ITranslationManagerService, ILocalizationProvider, ISingleton, IApplicationDependent, IMustValidate, IServiceName
     {
         [Parameter(Optional = false)]
         string DataServiceName = "";
@@ -37,6 +38,8 @@ namespace TranslationManager
 
         Application parentApp;
 
+        string svcName;
+
         Dictionary<string, Dictionary<string, string>> dictionaries = new Dictionary<string, Dictionary<string, string>>();
 
         Application IApplicationDependent.Parent
@@ -48,7 +51,7 @@ namespace TranslationManager
         {
             IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
 
-            dm.LoadEntitiesFields<Translation>(EntityLoadOption.AllFields);
+            dm.LoadEntitiesFields<AspectizeTranslation>(EntityLoadOption.AllFields);
 
             return dm.Data;
         }
@@ -63,14 +66,14 @@ namespace TranslationManager
 
             var dicoTranslations = new Dictionary<string, bool>();
 
-            List<Translation> translations = dm.GetEntities<Translation>();
+            List<AspectizeTranslation> translations = dm.GetEntities<AspectizeTranslation>();
 
-            foreach(Translation translation in em.GetAllInstances<Translation>())
+            foreach(AspectizeTranslation translation in em.GetAllInstances<AspectizeTranslation>())
             {
                 dicoTranslations.Add(translation.Key, translation.Ignore);
             }
 
-            List<string> languages = new List<string>(Languages.Split('|'));
+            List<string> languages = Languages.Split(',').Select(p => p.Trim()).ToList();
 
             Dictionary<string, bool> one = new Dictionary<string, bool>();
 
@@ -82,7 +85,7 @@ namespace TranslationManager
             {
                 if (!dicoTranslations.ContainsKey(l))
                 {
-                    var t = em.CreateInstance<Translation>();
+                    var t = em.CreateInstance<AspectizeTranslation>();
 
                     t.Key = l;
                     t.IsNew = true;
@@ -91,7 +94,7 @@ namespace TranslationManager
                     {
                         TranslationValue tv =  t.Values.Add();
 
-                        tv.Language = language;
+                        tv.Language = language.Trim();
                         tv.Value = "";
                     }
 
@@ -107,7 +110,7 @@ namespace TranslationManager
 
         DataSet ITranslationManagerService.ImportTraductionFromExcel(UploadedFile excelFile)
         {
-            List<string> languages = new List<string>(Languages.Split('|'));
+            List<string> languages = Languages.Split(',').Select(p => p.Trim()).ToList(); 
 
             IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
 
@@ -140,7 +143,7 @@ namespace TranslationManager
 
                 if (result != null && result.Tables.Count == 1)
                 {
-                    List<Translation> translations = dm.GetEntities<Translation>();
+                    List<AspectizeTranslation> translations = dm.GetEntities<AspectizeTranslation>();
 
                     DataTable dt = result.Tables[0];
 
@@ -152,7 +155,7 @@ namespace TranslationManager
                     {
                         string key = dr[KeyLanguage].ToString();
 
-                        Translation t = translations.Find(item => item.Key == key);
+                        AspectizeTranslation t = translations.Find(item => item.Key == key);
 
                         if (t == null)
                         {
@@ -177,6 +180,8 @@ namespace TranslationManager
                             }
                         }
 
+                        t.IsNew = false;
+
                         nbLine++;
                     }
 
@@ -194,7 +199,7 @@ namespace TranslationManager
 
             if (!dictionaries.ContainsKey(dictionaryName))
             {
-                List<string> languages = new List<string>(Languages.Split('|'));
+                List<string> languages = Languages.Split(',').Select(p => p.Trim()).ToList();
 
                 foreach (string language in languages)
                 {
@@ -209,9 +214,9 @@ namespace TranslationManager
 
                 IEntityManager em = dm as IEntityManager;
 
-                List<Translation> translations = dm.GetEntitiesFields<Translation>(EntityLoadOption.AllFields, new QueryCriteria(Translation.Fields.Ignore, ComparisonOperator.Equal, false));
+                List<AspectizeTranslation> translations = dm.GetEntitiesFields<AspectizeTranslation>(EntityLoadOption.AllFields, new QueryCriteria(AspectizeTranslation.Fields.Ignore, ComparisonOperator.Equal, false));
 
-                foreach (Translation translation in translations)
+                foreach (AspectizeTranslation translation in translations)
                 {
                     if (!translation.Ignore)
                     {
@@ -242,7 +247,7 @@ namespace TranslationManager
 
             IEntityManager em = dm as IEntityManager;
 
-            dm.LoadEntitiesFields<Translation>(EntityLoadOption.AllFields, new QueryCriteria(Translation.Fields.Ignore, ComparisonOperator.Equal, false));
+            dm.LoadEntitiesFields<AspectizeTranslation>(EntityLoadOption.AllFields, new QueryCriteria(AspectizeTranslation.Fields.Ignore, ComparisonOperator.Equal, false));
 
             IAspectizeExcel aspectizeExcel = ExecutingContext.GetService<IAspectizeExcel>("AspectizeExcel");
 
@@ -252,14 +257,14 @@ namespace TranslationManager
 
             dtTranslation.Columns.Add(KeyLanguage, typeof(string));
 
-            List<string> languages = new List<string>(Languages.Split('|'));
+            List<string> languages = Languages.Split(',').Select(p => p.Trim()).ToList();
 
             foreach (string language in languages)
             {
                 dtTranslation.Columns.Add(language, typeof(string));
             }
 
-            foreach(Translation translation in em.GetAllInstances<Translation>())
+            foreach(AspectizeTranslation translation in em.GetAllInstances<AspectizeTranslation>())
             {
                 var row = dtTranslation.NewRow();
 
@@ -289,7 +294,7 @@ namespace TranslationManager
 
             IEntityManager em = dm as IEntityManager;
 
-            foreach (Translation translation in em.GetAllInstances<Translation>())
+            foreach (AspectizeTranslation translation in em.GetAllInstances<AspectizeTranslation>())
             {
                 if (translation.IsNew)
                 {
@@ -307,6 +312,27 @@ namespace TranslationManager
         void ITranslationManagerService.ResetTranslationCache()
         {
             dictionaries.Clear();
+        }
+
+        string IMustValidate.ValidateConfiguration()
+        {
+            if (String.IsNullOrWhiteSpace(KeyLanguage)) return String.Format("Parameter KeyLanguage can not be NullOrWhiteSpace on TranslationManagerService '{0}'. The parameter should be a .Net language  culture name as 'en-US' !", svcName);
+            if (String.IsNullOrWhiteSpace(DataServiceName)) return String.Format("Parameter DataServiceName can not be NullOrWhiteSpace on TranslationManagerService '{0}'. The parameter should be a valid Data Service Name !", svcName);
+            if (String.IsNullOrWhiteSpace(Languages)) return String.Format("Parameter Languages can not be NullOrWhiteSpace on TranslationManagerService '{0}'. The parameter should be list of .Net language  culture names separated by , !", svcName);
+
+            var languages = Languages.Split(',').Select(p => p.Trim()).ToList();
+
+            foreach(string language in languages)
+            {
+                if (String.IsNullOrWhiteSpace(language)) return String.Format("Parameter Languages can not contains empty langauage on TranslationManagerService '{0}'. The parameter should be list of .Net language  culture names separated by , !", svcName);
+            }
+
+            return "";
+        }
+
+        void IServiceName.SetServiceName(string name)
+        {
+            svcName = name;
         }
     }
 
