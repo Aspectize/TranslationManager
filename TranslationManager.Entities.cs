@@ -50,13 +50,14 @@ namespace TranslationManager
 		}
 	}
 
-	[DataDefinition]
+	[DataDefinition(BeforeUpdate = "AspectizeTriggerService.SetDateNow('DateModified');", BeforeInsert = "AspectizeTriggerService.SetDateNow('DateModified');")]
 	public class AspectizeTranslation : Entity, IDataWrapper
 	{
 		public static partial class Fields
 		{
 			public const string Id = "Id";
 			public const string DateCreated = "DateCreated";
+			public const string DateModified = "DateModified";
 			public const string Key = "Key";
 			public const string Ignore = "Ignore";
 			public const string IsNew = "IsNew";
@@ -82,6 +83,13 @@ namespace TranslationManager
 		{
 			get { return getValue<DateTime>("DateCreated"); }
 			set { setValue<DateTime>("DateCreated", value); }
+		}
+
+		[Data]
+		public DateTime DateModified
+		{
+			get { return getValue<DateTime>("DateModified"); }
+			set { setValue<DateTime>("DateModified", value); }
 		}
 
 		[Data(DefaultValue = "")]

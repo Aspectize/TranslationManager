@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <diagram xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="84461889-7adb-4c18-be0d-1c0f84c625f3" domain="TranslationManager" xmlns="http://schemas.microsoft.com/dsltools/EntityDesigner">
   <entities>
-    <entity Id="6980976c-08d2-4a95-ac78-3b8d10e974ef" name="AspectizeTranslation" guid="c0e6979c-aa76-4576-9f4c-4223537927ae" hasCustomValidators="false" hasTriggers="false">
+    <entity Id="6980976c-08d2-4a95-ac78-3b8d10e974ef" name="AspectizeTranslation" guid="c0e6979c-aa76-4576-9f4c-4223537927ae" hasCustomValidators="false" hasTriggers="true" triggerBeforeUpdate="AspectizeTriggerService.SetDateNow('DateModified');" triggerBeforeInsert="AspectizeTriggerService.SetDateNow('DateModified');">
       <properties>
         <entityProperty name="DateCreated" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="DateModified" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
         <entityProperty name="Key" defaultValue="&quot;&quot;" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
         <entityProperty name="Ignore" type="Boolean" defaultValue="false" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
         <entityProperty name="IsNew" type="Boolean" defaultValue="false" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />

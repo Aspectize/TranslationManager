@@ -2,10 +2,10 @@
 <minimalLanguageDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="TranslationManager">
   <diagramMoniker Id="84461889-7adb-4c18-be0d-1c0f84c625f3" />
   <nestedChildShapes>
-    <entityShape Id="41998206-2814-4f8a-a81a-7031aba5dc91" absoluteBounds="1.875, 1.25, 2.125, 1.3915071614583332">
+    <entityShape Id="41998206-2814-4f8a-a81a-7031aba5dc91" absoluteBounds="1.875, 1.25, 2.125, 1.5838085937500002">
       <entityMoniker Id="6980976c-08d2-4a95-ac78-3b8d10e974ef" />
       <nestedChildShapes>
-        <elementListCompartment Id="35e2b8cc-1785-42a2-aaae-8f906f343855" absoluteBounds="1.89, 1.58, 2.0949999999999998, 0.96150716145833326" name="Properties" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="35e2b8cc-1785-42a2-aaae-8f906f343855" absoluteBounds="1.89, 1.58, 2.0949999999999998, 1.15380859375" name="Properties" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </entityShape>
     <compositeTypeShape Id="d7e4f61b-5fa8-4fac-8f2c-fa4b1a6911fb" absoluteBounds="6.25, 1.375, 2, 0.81460286458333364">

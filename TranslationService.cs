@@ -14,6 +14,9 @@ namespace TranslationManager
     public interface ITranslationManagerService
     {
         DataSet LoadTranslations();
+
+        [Command(DynamicAttributes = "BrowserCacheDuration = 30 Days")]
+        DataSet LoadTranslationValues(Guid translationId, DateTime dateModified);
         DataSet ExtractLiterals(string applicationName);
         DataSet ImportTraductionFromExcel(UploadedFile excelFile);
         byte[] ExportTranslationToExcel();
@@ -22,6 +25,8 @@ namespace TranslationManager
         DataSet SaveTranslations(DataSet dataSet);
 
         void ResetTranslationCache();
+
+        string GetPivotLanguage();
     }
 
     [Service(Name = "TranslationManagerService", ConfigurationRequired = true)]
@@ -51,10 +56,20 @@ namespace TranslationManager
         {
             IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
 
-            dm.LoadEntitiesFields<AspectizeTranslation>(EntityLoadOption.AllFields);
+            dm.LoadEntities<AspectizeTranslation>();
 
             return dm.Data;
         }
+
+        DataSet ITranslationManagerService.LoadTranslationValues(Guid translationId, DateTime dateModified)
+        {
+            IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
+
+            dm.LoadEntityFields<AspectizeTranslation>(EntityLoadOption.AllFields, translationId);
+
+            return dm.Data;
+        }
+
 
         DataSet ITranslationManagerService.ExtractLiterals(string applicationName)
         {
@@ -333,6 +348,11 @@ namespace TranslationManager
         void IServiceName.SetServiceName(string name)
         {
             svcName = name;
+        }
+
+        string ITranslationManagerService.GetPivotLanguage()
+        {
+            return KeyLanguage;
         }
     }
 
