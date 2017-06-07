@@ -15,10 +15,13 @@ namespace TranslationManager
     {
         DataSet LoadTranslations();
 
-        [Command(DynamicAttributes = "BrowserCacheDuration = 30 Days")]
+        [Command(BrowserCacheDuration = "30 Days")]
         DataSet LoadTranslationValues(Guid translationId, DateTime dateModified);
+
         DataSet ExtractLiterals(string applicationName);
+
         DataSet ImportTraductionFromExcel(UploadedFile excelFile);
+
         byte[] ExportTranslationToExcel();
 
         [Command(IsSaveCommand = true)]
