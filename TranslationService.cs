@@ -8,6 +8,7 @@ using Aspectize.Office;
 using Excel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace TranslationManager
 {
@@ -30,10 +31,12 @@ namespace TranslationManager
         void ResetTranslationCache();
 
         string GetPivotLanguage();
+
+        string[] GetLanguages();
     }
 
     [Service(Name = "TranslationManagerService", ConfigurationRequired = true)]
-    public class TranslationManagerService : ITranslationManagerService, ILocalizationProvider, ISingleton, IApplicationDependent, IMustValidate, IServiceName
+    public class TranslationManagerService : ITranslationManagerService, ILocalizationProvider, ISingleton, IApplicationDependent, IMustValidate, IServiceName//, ITranslationTerm
     {
         [Parameter(Optional = false)]
         string DataServiceName = "";
@@ -93,9 +96,7 @@ namespace TranslationManager
 
             List<string> languages = Languages.Split(',').Select(p => p.Trim()).ToList();
 
-            Dictionary<string, bool> one = new Dictionary<string, bool>();
-
-            List<string> literals = TranslationHelper.ExtractWebLiterals2(Context.HostHome, applicationName, one);
+            List<string> literals = TranslationHelper.ExtractWebLiterals2(Context.HostHome, applicationName);
 
             var nbSaved = 0;
 
@@ -345,7 +346,7 @@ namespace TranslationManager
                 if (String.IsNullOrWhiteSpace(language)) return String.Format("Parameter Languages can not contains empty langauage on TranslationManagerService '{0}'. The parameter should be list of .Net language  culture names separated by , !", svcName);
             }
 
-            return "";
+            return null;
         }
 
         void IServiceName.SetServiceName(string name)
@@ -357,6 +358,24 @@ namespace TranslationManager
         {
             return KeyLanguage;
         }
+
+        string[] ITranslationManagerService.GetLanguages()
+        {
+            return Languages.Split(',').Select(p => p.Trim()).ToArray();
+        }
+
+        //string ITranslationTerm.Translate(string term)
+        //{
+        //    string toLanguage = Thread.CurrentThread.CurrentCulture.Name;
+
+        //    var dico = ((ILocalizationProvider)this).GetTranslator(KeyLanguage, toLanguage);
+
+        //    if (dico != null && dico.ContainsKey(term)) {
+        //        return dico[term];
+        //    }
+
+        //    return term;
+        //}
     }
 
 }
