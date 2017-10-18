@@ -245,7 +245,7 @@ namespace TranslationManager
                         {
                             var value = translation.Values.Find(item => item.Language == language);
 
-                            if (value != null)
+                            if (value != null && !string.IsNullOrWhiteSpace(value.Value))
                             {
                                 string dicoName = string.Format("{0} {1}", KeyLanguage, language);
 
