@@ -33,6 +33,7 @@ namespace TranslationManager
         string GetPivotLanguage();
 
         string[] GetLanguages();
+        string Translate(string term, string toLanguage);
     }
 
     [Service(Name = "TranslationManagerService", ConfigurationRequired = true)]
@@ -364,18 +365,22 @@ namespace TranslationManager
             return Languages.Split(',').Select(p => p.Trim()).ToArray();
         }
 
-        //string ITranslationTerm.Translate(string term)
-        //{
-        //    string toLanguage = Thread.CurrentThread.CurrentCulture.Name;
+        string ITranslationManagerService.Translate(string term, string toLanguage)
+        {
+            if (string.IsNullOrWhiteSpace(toLanguage))
+            {
+                toLanguage = Thread.CurrentThread.CurrentCulture.Name;
+            }
 
-        //    var dico = ((ILocalizationProvider)this).GetTranslator(KeyLanguage, toLanguage);
+            var dico = ((ILocalizationProvider)this).GetTranslator(KeyLanguage, toLanguage);
 
-        //    if (dico != null && dico.ContainsKey(term)) {
-        //        return dico[term];
-        //    }
+            if (dico != null && dico.ContainsKey(term))
+            {
+                return dico[term];
+            }
 
-        //    return term;
-        //}
+            return term;
+        }
     }
 
 }
