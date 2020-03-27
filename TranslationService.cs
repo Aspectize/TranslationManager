@@ -228,6 +228,12 @@ namespace TranslationManager
                     string dicoName = string.Format("{0} {1}", KeyLanguage, language);
                     
                     dictionaries.Add(dicoName, dico);
+
+                    Dictionary<string, string> dicoReverse = new Dictionary<string, string>();
+
+                    string dicoReverseName = string.Format("{0} {1}", language, KeyLanguage);
+
+                    dictionaries.Add(dicoReverseName, dicoReverse);
                 }
 
                 IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
@@ -251,6 +257,13 @@ namespace TranslationManager
                                 string dicoName = string.Format("{0} {1}", KeyLanguage, language);
 
                                 dictionaries[dicoName].Add(key, value.Value);
+
+                                string dicoReverseName = string.Format("{0} {1}", language, KeyLanguage);
+
+                                if (!dictionaries[dicoReverseName].ContainsKey(value.Value)) {
+
+                                    dictionaries[dicoReverseName].Add(value.Value, key);
+                                }
                             }
                         }
                     }
