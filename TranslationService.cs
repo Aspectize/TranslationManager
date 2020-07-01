@@ -248,6 +248,10 @@ namespace TranslationManager
                     {
                         var key = translation.Key;
 
+                        var nbsp = '\u00a0';
+
+                        key = key.Replace(nbsp, ' ');
+
                         foreach (string language in languages)
                         {
                             var value = translation.Values.Find(item => item.Language == language);
@@ -256,13 +260,16 @@ namespace TranslationManager
                             {
                                 string dicoName = string.Format("{0} {1}", KeyLanguage, language);
 
-                                dictionaries[dicoName].Add(key, value.Value);
+                                if (!dictionaries[dicoName].ContainsKey(key)) {
 
-                                string dicoReverseName = string.Format("{0} {1}", language, KeyLanguage);
+                                    dictionaries[dicoName].Add(key, value.Value);
 
-                                if (!dictionaries[dicoReverseName].ContainsKey(value.Value)) {
+                                    string dicoReverseName = string.Format("{0} {1}", language, KeyLanguage);
 
-                                    dictionaries[dicoReverseName].Add(value.Value, key);
+                                    if (!dictionaries[dicoReverseName].ContainsKey(value.Value)) {
+
+                                        dictionaries[dicoReverseName].Add(value.Value, key);
+                                    }
                                 }
                             }
                         }
