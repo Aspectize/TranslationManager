@@ -163,7 +163,9 @@ namespace TranslationManager
 
                 if (result != null && result.Tables.Count == 1)
                 {
-                    List<AspectizeTranslation> translations = dm.GetEntities<AspectizeTranslation>();
+                    //List<AspectizeTranslation> translations = dm.GetEntities<AspectizeTranslation>();
+                    List<AspectizeTranslation> translations = dm.GetEntitiesFields<AspectizeTranslation>(EntityLoadOption.AllFields, new QueryCriteria(AspectizeTranslation.Fields.Ignore, ComparisonOperator.Equal, false));
+
 
                     DataTable dt = result.Tables[0];
 
