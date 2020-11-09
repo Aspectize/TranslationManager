@@ -164,7 +164,7 @@ namespace TranslationManager
                 if (result != null && result.Tables.Count == 1)
                 {
                     //List<AspectizeTranslation> translations = dm.GetEntities<AspectizeTranslation>();
-                    List<AspectizeTranslation> translations = dm.GetEntitiesFields<AspectizeTranslation>(EntityLoadOption.AllFields, new QueryCriteria(AspectizeTranslation.Fields.Ignore, ComparisonOperator.Equal, false));
+                    List<AspectizeTranslation> translations = dm.GetEntitiesFields<AspectizeTranslation>(EntityLoadOption.AllFields); //, new QueryCriteria(AspectizeTranslation.Fields.Ignore, ComparisonOperator.Equal, false));
 
 
                     DataTable dt = result.Tables[0];
@@ -177,7 +177,7 @@ namespace TranslationManager
                     {
                         string key = dr[KeyLanguage].ToString();
 
-                        AspectizeTranslation t = translations.Find(item => item.Key == key);
+                        AspectizeTranslation t = translations.Find(item => item.Key.Trim() == key.Trim());
 
                         if (t == null)
                         {
