@@ -101,8 +101,9 @@ namespace TranslationManager
 
             var nbSaved = 0;
 
-            foreach (string l in literals)
+            foreach (string literal in literals)
             {
+                var l = literal.Trim();
                 if (!dicoTranslations.ContainsKey(l))
                 {
                     var t = em.CreateInstance<AspectizeTranslation>();
