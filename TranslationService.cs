@@ -229,14 +229,18 @@ namespace TranslationManager
                     Dictionary<string, string> dico = new Dictionary<string, string>();
 
                     string dicoName = string.Format("{0} {1}", KeyLanguage, language);
-                    
-                    dictionaries.Add(dicoName, dico);
+
+                    if (!dictionaries.ContainsKey(dicoName)) {
+                        dictionaries.Add(dicoName, dico);
+                    }
 
                     Dictionary<string, string> dicoReverse = new Dictionary<string, string>();
 
                     string dicoReverseName = string.Format("{0} {1}", language, KeyLanguage);
 
-                    dictionaries.Add(dicoReverseName, dicoReverse);
+                    if (!dictionaries.ContainsKey(dicoReverseName)) {
+                        dictionaries.Add(dicoReverseName, dicoReverse);
+                    }
                 }
 
                 IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
