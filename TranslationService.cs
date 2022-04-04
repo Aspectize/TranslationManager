@@ -5,7 +5,7 @@ using System.Data;
 using Aspectize.Core;
 using Aspectize;
 using Aspectize.Office;
-using Excel;
+using ExcelDataReader;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -34,6 +34,8 @@ namespace TranslationManager
 
         string[] GetLanguages();
         string Translate(string term, string toLanguage);
+
+        void CleanTranslation();
     }
 
     [Service(Name = "TranslationManagerService", ConfigurationRequired = true)]
@@ -88,9 +90,9 @@ namespace TranslationManager
 
             var dicoTranslations = new Dictionary<string, bool>();
 
-            List<AspectizeTranslation> translations = dm.GetEntities<AspectizeTranslation>();
+            List<AspectizeTranslation> translations = dm.GetEntitiesFields<AspectizeTranslation>(EntityLoadOption.AllFields);
 
-            foreach(AspectizeTranslation translation in em.GetAllInstances<AspectizeTranslation>())
+            foreach (AspectizeTranslation translation in em.GetAllInstances<AspectizeTranslation>())
             {
                 dicoTranslations.Add(translation.Key, translation.Ignore);
             }
@@ -149,13 +151,19 @@ namespace TranslationManager
                 }
                 else throw new SmartException(100, @"File is not a valid Excel File, only valid Excel 2007 format (*.xlsx) is supported !");
 
-                excelReader.IsFirstRowAsColumnNames = true;
+                //excelReader.IsFirstRowAsColumnNames = true;
 
                 DataSet result = null;
 
                 try
                 {
-                    result = excelReader.AsDataSet();
+                    //result = excelReader.AsDataSet();
+
+                    result = excelReader.AsDataSet(new ExcelDataSetConfiguration() {
+                        ConfigureDataTable = (_) => new ExcelDataTableConfiguration() {
+                            UseHeaderRow = true
+                        }
+                    });
                 }
                 catch (Exception e)
                 {
@@ -407,6 +415,73 @@ namespace TranslationManager
             }
 
             return term;
+        }
+
+        void ITranslationManagerService.CleanTranslation() {
+            var sb = new StringBuilder();
+
+            IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
+
+            IEntityManager em = dm as IEntityManager;
+
+            var dicoTranslations = new Dictionary<string, Guid>();
+
+            List<AspectizeTranslation> translations = dm.GetEntitiesFields<AspectizeTranslation>(EntityLoadOption.AllFields);
+
+            foreach (AspectizeTranslation translation in em.GetAllInstances<AspectizeTranslation>()) {
+                if (!dicoTranslations.ContainsKey(translation.Key)) {
+                    dicoTranslations.Add(translation.Key, translation.Id);
+                } else {
+                    var previousTranslation = em.GetInstance<AspectizeTranslation>(translation.Id);
+
+                    var previousValues = previousTranslation.Values.GetList();
+                    var currentValues = translation.Values.GetList();
+
+                    var languages = Languages.Split(',').Select(p => p.Trim()).ToList();
+
+                    var nbPrevious = 0; var nbCurrent = 0; var tracePrevious = ""; var traceCurrent = "";
+
+                    bool equal = true;
+
+                    foreach (string language in languages) {
+                        var previousValueStr = ""; var currentValueStr = "";
+                        var previousValue = previousValues.SingleOrDefault(item => item.Language == language);
+                        var currentValue = currentValues.SingleOrDefault(item => item.Language == language);
+
+                        if (previousValue != null && !string.IsNullOrEmpty(previousValue.Value)) {
+                            nbPrevious++;
+                            previousValueStr = previousValue.Value;
+                        }
+
+                        if (currentValue != null && !string.IsNullOrEmpty(currentValue.Value)) {
+                            nbCurrent++;
+                            currentValueStr = currentValue.Value;
+                        }
+
+                        if (previousValueStr != currentValueStr) {
+                            equal = false;
+                            tracePrevious += previousValueStr;
+                            traceCurrent += currentValueStr;
+                        }
+                    }
+
+                    sb.AppendLine($"{translation.Key}");
+
+                    if (!equal) {
+                        if (nbPrevious > nbCurrent) {
+                            sb.AppendLine($"Previous : {translation.Key} : {tracePrevious} / {traceCurrent}");
+
+                        } else if (nbPrevious < nbCurrent) {
+                            sb.AppendLine($"Current : {translation.Key} : {tracePrevious} / {traceCurrent}");
+
+                        } else {
+                            sb.AppendLine($"Egal : {translation.Key} : {tracePrevious} / {traceCurrent}");
+                        }
+                    }
+                }
+            }
+
+            var res = sb.ToString();
         }
     }
 

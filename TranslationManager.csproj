@@ -56,9 +56,14 @@
       <HintPath>..\..\Delivery\Aspectize.core\AspectizeCore.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Excel, Version=2.1.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+    <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Delivery\Applications\TranslationManager\Lib\Excel.dll</HintPath>
+      <HintPath>..\..\Delivery\Applications\TranslationManager\Lib\ExcelDataReader.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Delivery\Applications\TranslationManager\Lib\ExcelDataReader.DataSet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SmartBlocksCore">
@@ -105,7 +110,11 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Lib\Excel.dll">
+    <Content Include="Lib\Excel.dll" />
+    <Content Include="Lib\ExcelDataReader.DataSet.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\ExcelDataReader.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
