@@ -190,7 +190,10 @@ namespace TranslationManager
 
                         if (t == null)
                         {
-                            throw new SmartException(200, @"Invalid translation key {0} at line {1}", key, nbLine);
+                            //throw new SmartException(200, @"Invalid translation key {0} at line {1}", key, nbLine);
+                            t = em.CreateInstance<AspectizeTranslation>();
+
+                            t.Key = key;
                         }
 
                         foreach(DataColumn dc in dt.Columns)
