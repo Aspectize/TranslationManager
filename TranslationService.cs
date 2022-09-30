@@ -108,6 +108,7 @@ namespace TranslationManager
                 var l = literal.Trim();
                 if (!dicoTranslations.ContainsKey(l))
                 {
+                    dicoTranslations.Add(l, false);
                     var t = em.CreateInstance<AspectizeTranslation>();
 
                     t.Key = l;
