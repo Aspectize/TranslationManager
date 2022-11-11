@@ -65,7 +65,7 @@ namespace TranslationManager
         {
             IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
 
-            dm.LoadEntities<AspectizeTranslation>();
+            dm.LoadEntitiesFields<AspectizeTranslation>(EntityLoadOption.AllFields);
 
             return dm.Data;
         }
