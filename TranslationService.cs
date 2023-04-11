@@ -16,7 +16,6 @@ namespace TranslationManager
     {
         DataSet LoadTranslations();
 
-        [Command(BrowserCacheDuration = "30 Days")]
         DataSet LoadTranslationValues(Guid translationId, DateTime dateModified);
 
         DataSet ExtractLiterals(string applicationName);
